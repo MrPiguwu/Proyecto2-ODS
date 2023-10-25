@@ -17,7 +17,23 @@ public class Presupuesto {
     public double consultarDisponible() {
         return montoTotal - montoUtilizado;
     }
+    private double montoAgua;
+    private double montoElectricidad;
 
-    // Otros métodos para consultar, reportar, etc.
+    public void asignarPresupuestoAgua(double monto) {
+        montoAgua = monto;
+    }
+
+    public void asignarPresupuestoElectricidad(double monto) {
+        montoElectricidad = monto;
+    }
+
+    public void gastarEnAgua(double monto) {
+        montoAgua -= monto;
+    }
+
+    public void gastarEnElectricidad(double monto) {
+        montoElectricidad -= monto;
+    }
 
 }
