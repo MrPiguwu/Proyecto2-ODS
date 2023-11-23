@@ -1,7 +1,7 @@
 // Clase Presupuesto
-import java.util.ArrayList;
 public class Presupuesto {
 
+    public static String montoUsado;
     private double montoTotal;
     private double montoUtilizado;
 
@@ -15,8 +15,10 @@ public class Presupuesto {
     }
 
     public double consultarDisponible() {
-        return montoTotal - montoUtilizado;
+        double MontoUsado= montoTotal - montoUtilizado;
+        return MontoUsado;
     }
+
     private double montoAgua;
     private double montoElectricidad;
 
@@ -36,4 +38,11 @@ public class Presupuesto {
         montoElectricidad -= monto;
     }
 
+    public double getMontoTotal() {
+        return montoTotal;
+    }
+
+    public void setMontoTotal(double montoTotal) {
+        this.montoTotal = montoTotal;
+    }
 }
