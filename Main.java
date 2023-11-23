@@ -1,12 +1,14 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
     public static final int SALIR = 0;
+    private static Presupuesto presupuesto;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Zona> zonas = new ArrayList<>();
+        ArrayList<Zona> zonas = Zona.loadZonas("zonas.csv");
 
         int opcion = -1;
 
@@ -66,6 +68,15 @@ public class Main {
                     }
                     System.out.println("Se ha simulado un mes de gastos.");
                     break;
+                case 5:
+                    // Mostrar lista de zonas con presupuesto
+                    System.out.println("Lista de Zonas con Presupuesto:");
+                    for (Zona zona : zonas) {
+                        System.out.println(zona.getNombre() + ": $" + presupuesto.consultarDisponible());
+                    }
+                    break;
+
+
 
                 case SALIR:
                     System.out.println("Saliendo del programa.");
@@ -84,5 +95,9 @@ public class Main {
             }
         }
         return null;
+
     }
+
+
+    
 }
