@@ -1,6 +1,6 @@
+import java.io.*;
 import java.util.ArrayList;
-
-// Clase Zona
+import java.util.List;
 
 public class Zona {
     private String nombre;
@@ -8,10 +8,55 @@ public class Zona {
 
     public Zona(String nombre) {
         this.nombre = nombre;
+        save();
     }
 
-    public void asignarPresupuesto(double monto) {
+    public Zona(String nombre, double monto) {
+        this.nombre = nombre;
+        this.presupuesto = new Presupuesto(monto);
+    }
+
+    public static ArrayList<Zona> loadZonas(String path) throws IOException {
+        ArrayList<Zona> zonas = new ArrayList<>();
+        File file = new File(path);
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                String nombre = parts[0];
+                double monto = parts.length > 1 && !parts[1].isEmpty() ? Double.parseDouble(parts[1]) : 0;
+                Zona zona = new Zona(nombre, monto);
+                zonas.add(zona);
+            }
+        }
+        return zonas;
+    }
+
+
+    public void asignarPresupuesto(double monto) throws IOException {
         presupuesto = new Presupuesto(monto);
+        updatePresupuestoInFile(monto);
+    }
+
+    private void updatePresupuestoInFile(double monto) throws IOException {
+        File file = new File("zonas.csv");
+        List<String> lines = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts[0].equals(nombre)) {
+                    line = nombre + "," + Presupuesto.montoUsado;
+                }
+                lines.add(line);
+            }
+        }
+
+        try (PrintWriter writer = new PrintWriter(new FileWriter(file))) {
+            for (String line : lines) {
+                writer.println(line);
+            }
+        }
     }
 
     public double consultarDisponible() {
@@ -23,13 +68,19 @@ public class Zona {
     }
 
     public void simularMes() {
-        // Simular gastos de agua y electricidad para un mes
-        double gastoAgua = 100.0; // Gasto fijo de agua para un mes
-        double gastoElectricidad = 150.0; // Gasto fijo de electricidad para un mes
+        double gastoAgua = 100.0;
+        double gastoElectricidad = 150.0;
 
-        // Restar los gastos del presupuesto
         if (presupuesto != null) {
             presupuesto.gastar(gastoAgua + gastoElectricidad);
+        }
+    }
+
+    private void save() {
+        try (PrintWriter writer = new PrintWriter(new FileWriter("zonas.csv", true))) {
+            writer.println(nombre + ",");
+        } catch (IOException e) {
+            System.out.println("Error al guardar la zona: " + e.getMessage());
         }
     }
 }
